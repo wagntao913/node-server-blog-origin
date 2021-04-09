@@ -6,7 +6,7 @@ const handlerBlogRouter = (req,res) => {
     const id= req.query.id
 
     // 获取blog列表
-    if(method === 'GET' && req.path === '/api/blog/list'){
+    if(method === 'GET' && req.path === '/api/blog/list') {
         const keyword = req.query.keyword || ''
         const author = req.query.author || ''
         const resData = getList(keyword,author)
@@ -14,20 +14,20 @@ const handlerBlogRouter = (req,res) => {
     }
 
     // 获取blog详情
-    if(method === 'GET' && req.path === '/api/blog/detail'){
+    if(method === 'GET' && req.path === '/api/blog/detail') {
         
         const resData = getDetail(id)
         return new SuccessModel(resData)
     }
 
     // 新建blog
-    if(method === 'POST' && req.path === '/api/blog/new'){
+    if(method === 'POST' && req.path === '/api/blog/new') {
         const blogData = newBlog(req.body)
         return new SuccessModel(blogData)
     }
 
     // 更新blog
-    if(method === 'POST' && req.path === '/api/blog/update'){
+    if(method === 'POST' && req.path === '/api/blog/update') {
         const result = updateBlog(id, req.body)
         if(result) {
             return new SuccessModel()
@@ -37,7 +37,7 @@ const handlerBlogRouter = (req,res) => {
     }
 
     // 删除 blog
-    if(method === 'POST' && req.path === '/api/blog/delete'){
+    if(method === 'POST' && req.path === '/api/blog/delete') {
         const result = deleteBlog(id)
         if(result) {
             return new SuccessModel()
