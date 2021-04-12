@@ -5,12 +5,11 @@ const handlerBlogRouter = require('./src/router/blog')
 
 const getPostData = (req) => {
     const promise = new Promise((reslove,reject) => {
-        if(req.method === 'GET') {
+        if(req.method !== 'POST') {
             reslove({})
             return
         }
-
-        if(req.header['content-type'] !== 'application/json'){
+        if(req.headers['content-type'] !== 'application/json'){
             reslove({})
             return
         }
@@ -41,11 +40,12 @@ const serverHandler = (req, res) => {
     // 处理 postData
     getPostData(req).then(postData => {
         req.body = postData
-
         // 处理 blog 路由
-        const blogData = handlerBlogRouter(req,res)
-        if(blogData){
-            res.end(JSON.stringify(blogData))
+        const blogResult = handlerBlogRouter(req,res)
+        if(blogResult){
+            blogResult.then(blogData => {
+                res.end(JSON.stringify(blogData))
+            })
             return
         }
     

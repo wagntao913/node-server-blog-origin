@@ -1,40 +1,32 @@
+const { exec } = require("../db/mysql")
+
 const getList = (keyword,author) => {
-    return [
-        {
-            title: '博客A',
-            content: '内容A',
-            author: '作者A',
-            createTime: '1617951468214'
-        },
-        {
-            title: '博客B',
-            content: '内容B',
-            author: '作者B',
-            createTime: '1617951468264'
-        },
-        {
-            title: '博客C',
-            content: '内容C',
-            author: '作者C',
-            createTime: '1617951469214'
-        }
-    ]
+    let sql =`SELECT * from blogs where 1=1 `
+    if(author){
+        sql += `and author=${author} `
+    }
+    if(keyword){
+        sql += `and title='%${keyword}%' `
+    }
+    sql += `order by createtime desc`
+    return exec(sql)
 }
 
 const getDetail = (id) => {
-    return {
-        idL:1,
-        title: '博客A',
-        content: '内容A',
-        author: '作者A',
-        createTime: '1617951468214'
-    }
+    let sql = `select * from blogs where id ='${id}'`
+    return exec(sql).then(rows => rows[0])
 }
 
 const newBlog = (blogData = {}) => {
-    return {
-        id: 3
-    }
+    const { title, content,author, createtime} = blogData
+    let sql = `
+    insert into blogs (title,content,createtime,author) 
+    values ('${title}','${content}','${createtime}','${author}')`
+    return exec(sql).then(rows =>{ 
+        return {
+            id:rows.insertId
+        }
+    })
 }
 
 const updateBlog = (id, blogData = {}) => {

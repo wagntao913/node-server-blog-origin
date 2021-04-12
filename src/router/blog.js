@@ -9,21 +9,28 @@ const handlerBlogRouter = (req,res) => {
     if(method === 'GET' && req.path === '/api/blog/list') {
         const keyword = req.query.keyword || ''
         const author = req.query.author || ''
-        const resData = getList(keyword,author)
-        return new SuccessModel(resData)
+        const result = getList(keyword,author)
+        return result.then(listData => {
+            return new SuccessModel(listData)
+        })
     }
 
     // 获取blog详情
     if(method === 'GET' && req.path === '/api/blog/detail') {
-        
-        const resData = getDetail(id)
-        return new SuccessModel(resData)
+        const result = getDetail(id)
+        return result.then(detail => {
+            return new SuccessModel(detail)
+        })
     }
 
     // 新建blog
     if(method === 'POST' && req.path === '/api/blog/new') {
-        const blogData = newBlog(req.body)
-        return new SuccessModel(blogData)
+        req.body.author = 'zhangsan'
+        console.log(req.body)
+        const result = newBlog(req.body)
+        return result.then(blogData => {
+            return new SuccessModel(blogData)
+        })
     }
 
     // 更新blog
