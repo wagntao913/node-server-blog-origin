@@ -36,21 +36,26 @@ const handlerBlogRouter = (req,res) => {
     // 更新blog
     if(method === 'POST' && req.path === '/api/blog/update') {
         const result = updateBlog(id, req.body)
-        if(result) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel('更新失败')
-        }
+        return result.then((updateDate) => {
+            if(updateDate) {
+                return new SuccessModel()
+            }else {
+                return new ErrorModel('更新失败')
+            }
+        })
     }
 
     // 删除 blog
     if(method === 'POST' && req.path === '/api/blog/delete') {
-        const result = deleteBlog(id)
-        if(result) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel('删除失败')
-        }
+        const author = 'zhangsan'
+        const result = deleteBlog(id, author)
+        return result.then((delDate) => {
+            if(delDate) {
+                return new SuccessModel()
+            }else {
+                return new ErrorModel('删除失败')
+            }
+        })
     }
 }
 
