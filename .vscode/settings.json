@@ -1,0 +1,39 @@
+{
+  "editor.tabSize": 2,
+  "files.associations": {
+      "*.vue": "vue"
+  },
+  "workbench.iconTheme": "vscode-icons",
+//   "files.autoSave": "afterDelay",
+  "eslint.autoFixOnSave": true,
+  "eslint.options": {
+      "extensions": [
+          ".js",
+          ".vue"
+      ]
+  },
+  "eslint.validate": [
+      "javascript",{
+          "language": "vue",
+          "autoFix": true
+      },
+      "html",
+      "vue"
+  ],
+  "editor.wordWrap": "on",
+  "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/dist": true
+  },
+  "emmet.syntaxProfiles": {
+      "javascript": "jsx",
+      "vue": "html",
+      "vue-html": "html"
+},
+"editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+},
+"liveServer.settings.port": 5501,
+"git.ignoreLimitWarning": true
+}
