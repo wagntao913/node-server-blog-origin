@@ -1,9 +1,10 @@
 const querystring = require('querystring')
 
+const { set, get } = require('./src/db/redis')
 const handlerUserRouter = require('./src/router/user')
 const handlerBlogRouter = require('./src/router/blog')
-const { set, get } = require('./src/db/redis')
 
+// 处理 post data 数据
 const getPostData = (req) => {
     const promise = new Promise((reslove,reject) => {
         if(req.method !== 'POST') {
@@ -27,6 +28,13 @@ const getPostData = (req) => {
         })
     })
     return promise
+}
+
+// 获取cookie 过期时间
+const getCookieExpires = () => {
+    const d = new Date()
+    d.setTime(d.getTime()+ (24 * 60 * 60 * 1000))
+    return d.toGMTString()
 }
 
 const serverHandler = (req, res) => {
@@ -55,7 +63,7 @@ const serverHandler = (req, res) => {
         needSetCookie = true
         userId = `${Date.now()}_${Math.random()}`
         // 初始化 redis 中的 session 值
-        set(userId,{})
+        set(userId,{})// 获取cookie 过期时间
     }
     // 获取session
     req.sessionId = userId
@@ -76,6 +84,9 @@ const serverHandler = (req, res) => {
         const blogResult = handlerBlogRouter(req,res)
         if(blogResult){
             blogResult.then(blogData => {
+                if(needSetCookie){
+                    res.setHeader('Set-Cookie', `userid=${req.sessionId};path=/;httpOnly;expires=${getCookieExpires()}`)
+                }
                 res.end(JSON.stringify(blogData))
             })
             return
@@ -85,6 +96,9 @@ const serverHandler = (req, res) => {
         const userResult = handlerUserRouter(req,res)
         if(userResult){
             userResult.then((userData) => {
+                if(needSetCookie){
+                    res.setHeader('Set-Cookie', `userid=${req.sessionId};path=/;httpOnly;expires=${getCookieExpires()}`)
+                }
                 res.end(JSON.stringify(userData))
             })
             return

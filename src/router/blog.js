@@ -32,6 +32,7 @@ const handlerBlogRouter = (req,res) => {
 
     // 新建blog
     if(method === 'POST' && req.path === '/api/blog/new') {
+        console.log(req.session)
         const loginCheckResult = loginCheck(req)
         if(loginCheckResult){
             return loginCheckResult
