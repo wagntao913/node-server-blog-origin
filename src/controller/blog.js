@@ -1,4 +1,5 @@
 const { exec } = require("../db/mysql")
+const xss = require('xss')
 
 const getList = (keyword,author) => {
     let sql =`SELECT * from blogs where 1=1 `
@@ -21,7 +22,7 @@ const newBlog = (blogData = {}) => {
     const { title, content,author, createtime} = blogData
     let sql = `
     insert into blogs (title,content,createtime,author) 
-    values ('${title}','${content}','${createtime}','${author}')`
+    values ('${xss(title)}','${content}','${createtime}','${author}')`
     return exec(sql).then(insertData =>{ 
         return {
             id:insertData.insertId

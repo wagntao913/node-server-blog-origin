@@ -1,8 +1,11 @@
 const querystring = require('querystring')
 
 const { set, get } = require('./src/db/redis')
+const { access } = require('./src/utils/log')
 const handlerUserRouter = require('./src/router/user')
 const handlerBlogRouter = require('./src/router/blog')
+
+
 
 // 处理 post data 数据
 const getPostData = (req) => {
@@ -38,13 +41,14 @@ const getCookieExpires = () => {
 }
 
 const serverHandler = (req, res) => {
-    res.setHeader('Content-type', 'application/json')
     const url = req.url
     req.path = url.split('?')[0]
-
+    // 记录日志
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+    // 设置请求头
+    res.setHeader('Content-type', 'application/json')
     // 解析query参数
     req.query = querystring.parse(url.split('?')[1])
-
     // 解析cookie
     req.cookie = {}
     const cookieStr = req.headers.cookie || ''
@@ -55,7 +59,6 @@ const serverHandler = (req, res) => {
         const val = arr[1].trim()
         req.cookie[key] = val
     });
-
     // 解析session
     let needSetCookie = false
     let userId = req.cookie.userid
